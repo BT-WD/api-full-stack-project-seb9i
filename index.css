@@ -1,1 +1,29 @@
 
+header {
+  display: flex;
+  justify-content: space-between; /* Spreads logo, nav, and search bar */
+  align-items: center;            /* Vertically centers all items */
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+}
+
+.search-container {
+  display: flex;                  /* Keeps input and button side-by-side */
+}
+
+.search-container input {
+  padding: 8px;
+  border: none;
+  border-radius: 2px 0 0 2px;     /* Rounds only the left corners */
+  outline: none;
+}
+
+.search-container button {
+  padding: 8px 15px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;     /* Rounds only the right corners */
+  cursor: pointer;
+}
