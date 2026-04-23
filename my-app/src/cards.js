@@ -1,14 +1,23 @@
 import './App.css';
-import React, { useRef, useEffect, useState, useContext } from "react";
-import { ScrollMenu, VisibilityContext } from "react-horizontal-scrolling-menu";
+import React, { useState } from "react";
+import InfiniteScroll from 'react-infinite-scroll-component';
+import GamePage from './gamepage';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 
-import "react-horizontal-scrolling-menu/dist/styles.css";
-const items = Array.from({ length: 10 }, (_, i) => `Item ${i + 1}`);
 
 
 function Card({ title }) {
+   const navigate = useNavigate();
+
+  // Function to handle click
+  const handleClick = () => {
+    navigate("/GamePage"); // Navigate to About page
+  };
   return (
+    
     <div
+      onClick= {handleClick}
+
      style={{
     width: "250px",   // 👈 fixed width works best for scroll menus
     height: "500px",
@@ -29,7 +38,7 @@ function Card({ title }) {
         objectFit: "cover"
         }}
     />
-      <p style={{ padding: "10px" }}>{title}</p>
+      <p style={{ padding: "10px", color: "black" }}>{title}</p>
     </div>
   );
 }
@@ -38,42 +47,47 @@ function Card({ title }) {
 
 
 export default function MainCards() {
-  const apiRef = useRef(null);
-  const [isPaused, setIsPaused] = useState(false);
-  const { isLastItem } = useContext(VisibilityContext);    
-
-  useEffect(() => {
-    // Set up the interval
-    
-    const timer = setInterval(() => {
-      console.log(isLastItem)
-      if (!isPaused && apiRef.current) {
-        if (isLastItem) {
-            
-          // If we hit the end, jump back to the start
-          apiRef.current.scrollToItem(apiRef.current.getItemById(items[0]));
-        } else {
-          apiRef.current.scrollNext();
-        }
-      }
-    }, 1000); // Scrolls every 3 seconds
-
-    // Clean up timer on unmount
-    return () => clearInterval(timer);
-  }, [isPaused]);
-
-  return (
-    <div 
-      className="CardList" 
-      // Pause scrolling when mouse enters, resume when it leaves
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-    >
-      <ScrollMenu apiRef={apiRef}>
-        {items.map((item) => (
-          <Card itemId={item} key={item} title={item} />
-        ))}
-      </ScrollMenu>
-    </div>
+  const [items, setItems] = useState(
+    Array.from({ length: 10 }, (_, i) => `Item ${i + 1}`)
   );
+  const [hasMore, setHasMore] = useState(true);
+
+  const fetchData = () => {
+  setTimeout(() => {
+    const nextItems = Array.from(
+      { length: 10 },
+      (_, i) => `Item ${items.length + i + 1}`
+    );
+
+    setItems((prev) => [...prev, ...nextItems]);
+
+    // stop after 50 items (example)
+    if (items.length >= 50) {
+      setHasMore(false);
+    }
+  }, 1000);
+};
+  return (
+  <div className="CardList">
+    <div className="horizontal-container">
+        <InfiniteScroll
+            dataLength={items.length}
+            next={fetchData}
+            hasMore={hasMore}
+            loader={<h4>Loading...</h4>}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+            }}
+          >
+            {items.map((item) => (
+              <div className="card-wrapper" key={item}>
+                <Card title={item} />
+              </div>
+            ))}
+          </InfiniteScroll>
+  
+</div>
+  </div>
+);
 }

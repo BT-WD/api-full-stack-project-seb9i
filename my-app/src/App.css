@@ -42,29 +42,116 @@
 
 
 .CardList {
-  width: 95%;
-  max-width: 1200px;
-
-  margin-top: 150px;
-
   display: flex;
-  justify-content: center;
-
-  overflow: hidden; /* prevents scroll overflow issues */
-}
-
-/* This ensures the scroll menu items and arrows stay in a single row */
-.react-horizontal-scrolling-menu--wrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   width: 100%;
+  max-width:1200px;
+  margin-top: 200px;
+  overflow-x: auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
-.react-horizontal-scrolling-menu--scroll-container {
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #252935;
+  color: white;
+}
+
+/* Navbar */
+.navbar {
   display: flex;
-  flex-direction: row;
-  overflow: hidden; /* Hide the scrollbar while allowing programmatic scroll */
+  justify-content: space-between;
+  padding: 20px;
+  background: #111827;
+  align-items: center;
+}
+
+.logo {
+  font-size: 24px;
+}
+
+/* Hero */
+.hero {
+  position: relative;
+  height: 500px;
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-overlay {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+
+.game-title {
+  font-size: 48px;
+  margin: 0;
+}
+
+.game-tagline {
+  max-width: 600px;
+  color: #cbd5e1;
+}
+
+.trailer-btn {
+  margin-top: 10px;
+  padding: 10px 15px;
+  background: #06b6d4;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+/* Layout */
+.content {
+  display: flex;
+  gap: 20px;
+  padding: 40px;
+}
+
+/* Main */
+.main {
+  flex: 3;
+}
+
+.screenshots {
+  display: flex;
+  gap: 10px;
+}
+
+.screenshots img {
+  width: 200px;
+  border-radius: 8px;
+}
+
+/* Sidebar */
+.sidebar {
+  flex: 1;
+}
+
+.info-box {
+  background: #1e293b;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.star {
+  color: gold;
 }
 
 /* App.css */
@@ -93,6 +180,17 @@ button {
 h1 {
   margin: 6;
 }
+.horizontal-container {
+  display: flex;
+  
+  flex-direction: row;
+  width: max-content; /* critical */
+  gap: 16px;  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+
+
 
 .logo {
   font-size: 1.5rem;
