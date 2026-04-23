@@ -13,7 +13,12 @@
   }
 }
 
-
+.app-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 👈 this is key */
+}
 
 .search-container {
   display: flex;                  /* Keeps input and button side-by-side */
@@ -36,15 +41,57 @@
 }
 
 
+.CardList {
+  width: 95%;
+  max-width: 1200px;
+
+  margin-top: 150px;
+
+  display: flex;
+  justify-content: center;
+
+  overflow: hidden; /* prevents scroll overflow issues */
+}
+
+/* This ensures the scroll menu items and arrows stay in a single row */
+.react-horizontal-scrolling-menu--wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+}
+
+.react-horizontal-scrolling-menu--scroll-container {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden; /* Hide the scrollbar while allowing programmatic scroll */
+}
 
 /* App.css */
 .navbar {
+  width: 100%;
+  box-sizing: border-box;
+
   display: flex;
-  justify-content: space-between; /* This creates the gap between them */
-  align-items: center;           /* Vertically centers the text and search bar */
-  padding: 1rem 2rem;            /* Adds space inside the header */
-  background-color: #20232a;     /* Optional: Dark theme background */
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 1rem 2rem; 
+
+  background-color: #20232a;
   color: white;
+}
+button {
+  background: #20232a;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  border-radius: 6px;
+}
+h1 {
+  margin: 6;
 }
 
 .logo {
