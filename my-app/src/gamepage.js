@@ -1,24 +1,22 @@
 import Search from "./search";
 import "./App.css";
+import { useState, useEffect } from "react";
 
 export default function GamePage() {
-  const gameData = {
-    name: "Elden Ring",
-    tagline: "An epic open-world action RPG set in a dark fantasy universe.",
-    releaseDate: "February 25, 2022",
-    genre: "Action RPG",
-    platforms: "PC, PS5, Xbox",
-    rating: "9.5 / 10",
-    description:
-      "Elden Ring is an action RPG developed by FromSoftware and published by Bandai Namco Entertainment. Explore a vast open world filled with powerful enemies, hidden secrets, and deep lore written by George R. R. Martin in collaboration with Hidetaka Miyazaki.",
-    heroImage:
-      "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=1200&h=500&fit=crop&q=80",
-    screenshots: [
-      "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&h=180&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=301&h=180&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=302&h=180&fit=crop&q=80",
-    ],
-  };
+  const [games, setGames] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/games")
+      .then(res => res.json())
+      .then(data => setGames(data))
+      .catch(err => console.error(err));
+  }, []);
+
+  const gameData = games[0]; // use first game
+
+  if (!gameData) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="game-container">
@@ -31,7 +29,9 @@ export default function GamePage() {
 
       {/* Hero */}
       <div className="hero">
-        <img src={gameData.heroImage} alt="Game Banner" className="hero-image" />
+        {gameData.heroImage && (
+          <img src={gameData.heroImage} alt="Game Banner" className="hero-image" />
+        )}
 
         <div className="hero-overlay">
           <h2 className="game-title">{gameData.name}</h2>
@@ -49,7 +49,7 @@ export default function GamePage() {
 
           <h3>Screenshots</h3>
           <div className="screenshots">
-            {gameData.screenshots.map((img, i) => (
+            {gameData.screenshots?.map((img, i) => (
               <img key={i} src={img} alt={`screenshot-${i}`} />
             ))}
           </div>
