@@ -27,7 +27,7 @@ export default function App() {
         />
 
         {/* Game page */}
-        <Route path="/gamepage" element={<GamePage />} />
+        <Route path="/gamepage/:id" element={<GamePage />} />
 
       </Routes>
     </Router>

@@ -1,18 +1,20 @@
 import Search from "./search";
 import "./App.css";
+import { useParams } from "react-router-dom";
+
 import { useState, useEffect } from "react";
 
 export default function GamePage() {
   const [games, setGames] = useState([]);
-
+  const { id } = useParams();
   useEffect(() => {
-    fetch("http://localhost:5000/api/games")
+    fetch(`http://localhost:5000/api/game/${id}`)
       .then(res => res.json())
       .then(data => setGames(data))
       .catch(err => console.error(err));
   }, []);
 
-  const gameData = games[0]; // use first game
+  const gameData = games // use first game
 
   if (!gameData) {
     return <p>Loading...</p>;
@@ -30,7 +32,7 @@ export default function GamePage() {
       {/* Hero */}
       <div className="hero">
         {gameData.heroImage && (
-          <img src={gameData.heroImage} alt="Game Banner" className="hero-image" />
+          <img src={gameData.backdrop} alt="Game Banner" className="hero-image" />
         )}
 
         <div className="hero-overlay">

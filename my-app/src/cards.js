@@ -1,17 +1,31 @@
 import './App.css';
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import InfiniteScroll from 'react-infinite-scroll-component';
-import GamePage from './gamepage';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+var currentNumber = 1
+function usePopularGames() {
+  const [games, setGames] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/trending")
+      .then(res => res.json())
+      .then(setGames)
+      .catch(console.error);
+  }, []);
 
 
+  return games;
+}
+function Card({ title, screenshot, id }) {
+   const games = usePopularGames();
 
-function Card({ title }) {
+  <div>{games.length} games loaded</div>;
+
    const navigate = useNavigate();
 
   // Function to handle click
   const handleClick = () => {
-    navigate("/GamePage"); // Navigate to About page
+    navigate(`/GamePage/${id}`); // Navigate to About page
   };
   return (
     
@@ -30,7 +44,7 @@ function Card({ title }) {
     }}
     >
         <img
-        src="https://picsum.photos/200/300"
+        src={screenshot}
         alt="example"
         style={{
         width: "100%",
@@ -47,47 +61,58 @@ function Card({ title }) {
 
 
 export default function MainCards() {
-  const [items, setItems] = useState(
-    Array.from({ length: 10 }, (_, i) => `Item ${i + 1}`)
-  );
+  const [games, setGames] = useState([]);
+  const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
-  const fetchData = () => {
-  setTimeout(() => {
-    const nextItems = Array.from(
-      { length: 10 },
-      (_, i) => `Item ${items.length + i + 1}`
-    );
+  const fetchGames = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/trending?offset=${offset}`
+      );
+      const data = await res.json();
 
-    setItems((prev) => [...prev, ...nextItems]);
+      if (!Array.isArray(data)) {
+        console.error("Unexpected API response:", data);
+        setHasMore(false);
+        return;
+      }
 
-    // stop after 50 items (example)
-    if (items.length >= 50) {
-      setHasMore(false);
+      if (data.length === 0) {
+        setHasMore(false);
+        return;
+      }
+      
+      setGames((prev) => [...prev, ...data]);
+      setOffset((prev) => prev + 10);
+    } catch (err) {
+      console.error(err);
     }
-  }, 1000);
-};
+  };
+
+  useEffect(() => {
+    fetchGames(); // initial load
+  }, []);
+
   return (
-  <div className="CardList">
-    <div className="horizontal-container">
+    <div className="CardList">
+      <div className="horizontal-container">
+        
         <InfiniteScroll
-            dataLength={items.length}
-            next={fetchData}
-            hasMore={hasMore}
-            loader={<h4>Loading...</h4>}
-            style={{
-              display: "flex",
-              flexDirection: "row",
-            }}
-          >
-            {items.map((item) => (
-              <div className="card-wrapper" key={item}>
-                <Card title={item} />
-              </div>
-            ))}
-          </InfiniteScroll>
-  
-</div>
-  </div>
-);
+          dataLength={games.length}
+          next={fetchGames}
+          hasMore={hasMore}
+          loader={<h4>Loading...</h4>}
+          style={{ display: "flex", flexDirection: "row" }}
+        >
+          {games.map((game) => (
+            
+            <div className="card-wrapper" key={game.name}>
+              <Card title={game.name} screenshot={`${game.heroImage}`} id={game.id} />
+            </div>
+          ))}
+        </InfiniteScroll>
+      </div>
+    </div>
+  );
 }
