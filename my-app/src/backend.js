@@ -8,6 +8,8 @@ const app = express();
 app.use(cors());
 
 app.get('/api/games', async (req, res) => {
+  const search = req.query.search;
+
   try {
     const response = await fetch('https://api.igdb.com/v4/games', {
       method: 'POST',
@@ -17,13 +19,13 @@ app.get('/api/games', async (req, res) => {
         Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
       },
       body: `
+        search "${search || ""}";
         fields name, summary, rating, first_release_date, genres.name, platforms.name, cover.url, screenshots.url;
         limit 10;
       `
     });
 
     const data = await response.json();
-
     const formatted = data.map(game => ({
       name: game.name || "Unknown",
       id: game.id,
